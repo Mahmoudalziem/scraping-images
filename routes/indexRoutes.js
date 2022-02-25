@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/', async(req, res) => {
 
-    const file = path.resolve('products1.xlsx');
+    const file = path.resolve('products.xlsx');
 
     let fileData = XLSX.read(file, {
         type: "file"
