@@ -1,17 +1,11 @@
 import dotenv from 'dotenv'
-import express from 'express'
 import path from 'path'
 import Scraper from 'images-scraper';
 import XLSX from "xlsx";
 import fs from 'fs'
 
-const app = express();
-
 dotenv.config();
 
-app.use(express.urlencoded({ extended: true }));
-
-app.use(express.json({ limit: '500MB' }));
 
 fs.readFile('./products.xlsx', 'utf8', async(err, data) => {
 
@@ -36,9 +30,7 @@ fs.readFile('./products.xlsx', 'utf8', async(err, data) => {
         dataOfProducts.push(data['أسم المنتج']);
     }
 
-    const google = new Scraper({
-        puppeteer: {}
-    });
+    const google = new Scraper();
 
     const images = [];
 
@@ -81,10 +73,3 @@ fs.readFile('./products.xlsx', 'utf8', async(err, data) => {
 
     }
 });
-
-const PORT = process.env.PORT || 3001;
-
-app.listen(PORT, () => {
-
-    console.log(`Example app listening on PORT ${PORT}`)
-})
