@@ -1,0 +1,19 @@
+{
+    "name": "scrapping",
+    "version": "1.0.0",
+    "description": "",
+    "main": "script.js",
+    "type": "module",
+    "scripts": {
+        "start": "npx nodemon --experimental-modules --es-module-specifier-resolution=node script",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Mahmoud Abd Alziem",
+    "license": "ISC",
+    "dependencies": {
+        "dotenv": "^16.0.0",
+        "express": "^4.17.3",
+        "images-scraper": "^6.4.0",
+        "xlsx": "^0.18.2"
+    }
+}
