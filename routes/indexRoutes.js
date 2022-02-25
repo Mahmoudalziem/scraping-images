@@ -2,13 +2,13 @@ import fs from 'fs';
 import path from 'path';
 import XLSX from "xlsx";
 import express from 'express';
-import Scraper from 'images-scraper';
+import Scraper from './scraper';
 
 const router = express.Router();
 
 router.get('/', async(req, res) => {
 
-    const file = path.resolve('products.xlsx');
+    const file = path.resolve('products1.xlsx');
 
     let fileData = XLSX.read(file, {
         type: "file"
