@@ -13,12 +13,14 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json({ limit: '500MB' }));
 
-app.use(async(req, res, next) => {
+fs.readFile('./products.xlsx', 'utf8', async(err, data) => {
 
-    const file = path.resolve('products.xlsx');
+    if (err) throw (err);
 
-    let fileData = XLSX.read(file, {
-        type: "file"
+    // console.log(data);
+
+    let fileData = XLSX.read(data, {
+        type: "base64"
     });
 
     const sheetName = fileData.SheetNames[0];
@@ -28,8 +30,6 @@ app.use(async(req, res, next) => {
     const worksheetObj = XLSX.utils.sheet_to_json(worksheet, { raw: true });
 
     let dataOfProducts = [];
-
-    // console.log(worksheetObj);
 
     for (const [index, data] of worksheetObj.entries()) {
 
@@ -57,6 +57,8 @@ app.use(async(req, res, next) => {
 
     });
 
+    console.log(images);
+
     if (images.length > 0) {
 
         const pro = XLSX.utils.json_to_sheet(images);
@@ -66,22 +68,20 @@ app.use(async(req, res, next) => {
             SheetNames: ["Porducts_images"],
         };
 
-        if (fs.existsSync(path.resolve('images.xlsx'))) fs.rmdirSync(path.resolve('images.xlsx'), { recursive: true });
+        if (fs.existsSync(path.join('images.xlsx'))) fs.rmdirSync(path.join('images.xlsx'), { recursive: true });
 
-        XLSX.writeFile(proImages, path.resolve('images.xlsx'), {
+        XLSX.writeFile(proImages, path.join('images.xlsx'), {
             bookType: "xlsx",
             type: "array",
         });
 
-        fs.writeFile("images.json", images, 'utf8', function(err) {
+        fs.writeFile("images.json", JSON.stringify(images), 'utf8', function(err) {
 
             console.log("JSON file has been saved.");
 
         });
 
     }
-
-    next();
 });
 
 const PORT = process.env.PORT || 3001;
