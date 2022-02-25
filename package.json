@@ -2,14 +2,21 @@
     "name": "scrapping",
     "version": "1.0.0",
     "description": "",
-    "main": "script.js",
+    "main": "app.js",
     "type": "module",
     "scripts": {
-        "start": "npx nodemon --experimental-modules --es-module-specifier-resolution=node script",
+        "start": "npx nodemon --experimental-modules --es-module-specifier-resolution=node ./bin/www",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Mahmoud Abd Alziem",
     "license": "ISC",
+    "engines": {
+        "node": "14.x"
+    },
+    "keywords": [
+        "scraping",
+        "heroku"
+    ],
     "dependencies": {
         "dotenv": "^16.0.0",
         "express": "^4.17.3",

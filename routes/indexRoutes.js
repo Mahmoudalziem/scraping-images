@@ -1,20 +1,17 @@
-import dotenv from 'dotenv'
-import path from 'path'
-import Scraper from 'images-scraper';
+import fs from 'fs';
+import path from 'path';
 import XLSX from "xlsx";
-import fs from 'fs'
+import express from 'express';
+import Scraper from 'images-scraper';
 
-dotenv.config();
+const router = express.Router();
 
+router.get('/', async(req, res) => {
 
-fs.readFile('./products.xlsx', 'utf8', async(err, data) => {
+    const file = path.resolve('products.xlsx');
 
-    if (err) throw (err);
-
-    // console.log(data);
-
-    let fileData = XLSX.read(data, {
-        type: "base64"
+    let fileData = XLSX.read(file, {
+        type: "file"
     });
 
     const sheetName = fileData.SheetNames[0];
@@ -27,7 +24,7 @@ fs.readFile('./products.xlsx', 'utf8', async(err, data) => {
 
     for (const [index, data] of worksheetObj.entries()) {
 
-        dataOfProducts.push(data['أسم المنتج']);
+        dataOfProducts.push(data["أسم المنتج"]);
     }
 
     const google = new Scraper();
@@ -36,16 +33,21 @@ fs.readFile('./products.xlsx', 'utf8', async(err, data) => {
 
     const results = await google.scrape(dataOfProducts, 3);
 
+    // return console.log(results);
+
     results.map((item) => {
 
-        const itemImages = {};
+        const itemImages = [];
 
         item.images.map((image, key) => {
 
-            return itemImages[key] = image ? image.url : null;
+            return itemImages.push(image.url);
         });
 
-        return images.push(itemImages);
+        return images.push({
+            query: item.query,
+            images: itemImages
+        });
 
     });
 
@@ -70,6 +72,9 @@ fs.readFile('./products.xlsx', 'utf8', async(err, data) => {
             console.log("JSON file has been saved.");
 
         });
-
     }
+
+    res.send(images);
 });
+
+export default router;
