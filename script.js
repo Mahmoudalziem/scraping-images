@@ -57,8 +57,6 @@ fs.readFile('./products.xlsx', 'utf8', async(err, data) => {
 
     });
 
-    console.log(images);
-
     if (images.length > 0) {
 
         const pro = XLSX.utils.json_to_sheet(images);
