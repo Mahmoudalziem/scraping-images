@@ -27,11 +27,7 @@ router.get('/', async(req, res) => {
         dataOfProducts.push(data["أسم المنتج"]);
     }
 
-    const google = new Scraper({
-        puppeteer: {
-            headless: false
-        }
-    });
+    const google = new Scraper();
 
     const images = [];
 
@@ -50,8 +46,8 @@ router.get('/', async(req, res) => {
         });
 
         return images.push({
-            query: item.query,
-            images: itemImages
+            "اسم المنتج": item.query,
+            "صورة المنتج": itemImages.join(',')
         });
 
     });
