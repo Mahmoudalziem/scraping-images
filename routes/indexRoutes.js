@@ -27,11 +27,16 @@ router.get('/', async(req, res) => {
         dataOfProducts.push(data["أسم المنتج"]);
     }
 
-    const google = new Scraper();
+    const google = new Scraper({
+        puppeteer: {
+            headless: false
+        }
+    });
 
     const images = [];
 
     const results = await google.scrape(dataOfProducts, 3);
+
 
     // return console.log(results);
 
