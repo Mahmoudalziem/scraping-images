@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import XLSX from "xlsx";
 import express from 'express';
-import Scraper from './scraper';
+import Scraper from '../lib/scraper';
 
 const router = express.Router();
 
@@ -10,11 +10,13 @@ router.get('/', async(req, res) => {
 
     console.log("start");
 
-    const file = path.resolve('products.xlsx');
+    const file = path.resolve('products1.xlsx');
 
     let fileData = XLSX.read(file, {
         type: "file"
     });
+
+    const lengthItems = 20;
 
     const sheetName = fileData.SheetNames[0];
 
@@ -29,30 +31,33 @@ router.get('/', async(req, res) => {
         dataOfProducts.push(data["أسم المنتج"]);
     }
 
+    dataOfProducts = new Array(Math.ceil(dataOfProducts.length / lengthItems)).fill().map(_ => dataOfProducts.splice(0, lengthItems));
+
+    // return console.log(dataOfProducts);
+
     const google = new Scraper();
 
     const images = [];
 
-    const results = await google.scrape(dataOfProducts, 3);
+    for (let i = 0; i < dataOfProducts.length; i++) {
 
+        const results = await google.scrape(dataOfProducts[i], 3);
 
-    // return console.log(results);
+        results.map((item) => {
 
-    results.map((item) => {
+            const itemImages = [];
 
-        const itemImages = [];
+            item.images.map(image => itemImages.push(image.url));
 
-        item.images.map((image, key) => {
+            return images.push({
+                "اسم المنتج": item.query,
+                "صورة المنتج": itemImages.join(',')
+            });
 
-            return itemImages.push(image.url);
         });
+    }
 
-        return images.push({
-            "اسم المنتج": item.query,
-            "صورة المنتج": itemImages.join(',')
-        });
 
-    });
 
     if (images.length > 0) {
 
@@ -78,6 +83,10 @@ router.get('/', async(req, res) => {
     }
 
     res.send(images);
+
+    // return console.log(results);
+
+
 });
 
 export default router;
